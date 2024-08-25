@@ -4,14 +4,17 @@
  * License - Apache 2.0
  */
 
+// 记得改版本号, 记得改版本号, 记得改版本号
+// 记得改 package.json, 记得改 package.json, 记得改 package.json
+
+const versionName = 'v1.0.0'
+
 const { CqApi, default: linkServer, useMod, ModTypes, PostTypes } = require('cqhttp-ts')
 
 const child_process = require('node:child_process')
 const { textMsg, config, setAdmin } = require('./utils')
 
 const io = require('./io')
-
-const versionName = 'v1.0.0'
 
 function forkSelf() {
     child_process.fork('main', ['--child-process'], {}).on('exit', (code) => {

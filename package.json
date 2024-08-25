@@ -1,6 +1,15 @@
 {
+  "name": "moon-onebot-qqbot",
+  "description": "A simple qq bot based on OneBot, uses cqhttp-ts.",
+  "version": "0.0.0",
+  "license": "Apache License 2.0",
+  "author": {
+    "name": "MoonLeeeaf",
+    "url": "https://github.com/MoonLeeeaf"
+  },
   "dependencies": {
     "cqhttp-ts": "^1.3.0",
     "html-entities": "^2.5.2"
-  }
+  },
+  "type": "commonjs"
 }
