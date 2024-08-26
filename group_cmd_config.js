@@ -263,7 +263,7 @@ const configList = [
 
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
-                message: `[CQ:reply,id=${msg.message_id}]满月娘已经按要求操作啦~`,
+                message: `[CQ:reply,id=${msg.message_id}]满月娘已经按要求操作啦~ (被操作者 ${getAt(argv[1])})`,
             })
         }
     ],
