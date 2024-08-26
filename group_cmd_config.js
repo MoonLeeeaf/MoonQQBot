@@ -202,7 +202,7 @@ const configList = [
 
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
-                message: `[CQ:reply,id=${msg.message_id}]介个视频的链接是紫酱的: ${video}`,
+                message: makeSingleForwardMessage(`💮视频链接💮\n${video}\n\n💮视频发送者: ${replyMsg.sender.nickname}(${replyMsg.sender.user_id})💮\n💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮`) // `[CQ:reply,id=${msg.message_id}]介个视频的链接是紫酱的: ${video}`,
             })
         }
     ],
