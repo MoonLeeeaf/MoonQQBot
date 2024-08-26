@@ -6,7 +6,7 @@
 
 const { CqApi, ModTypes, PostTypes } = require('cqhttp-ts')
 
-const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdminOrThrow, setAdmin, configDB, config, checkCoreAdminOrThrow, setCoreAdmin, checkCoreAdmin, checkAdmin } = require('./utils')
+const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdminOrThrow, setAdmin, configDB, config, checkCoreAdminOrThrow, setCoreAdmin, checkCoreAdmin, checkAdmin, makeSingleForwardMessage } = require('./utils')
 
 
 // ======== 功能配置处 ========
