@@ -51,14 +51,26 @@ const configList = [
         /^权限$/,
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
-            CqApi.sendGroupForwardMessageApi({
+            CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
                 message: `[CQ:reply,id=${msg.message_id}]当前权限等级: ${checkCoreAdmin(msg.sender.user_id) ? '核心' : (checkAdmin(msg.sender.user_id) ? '普通' : '无管理' )}`,
             })
         }
     ],
     [
-        /^(执行|运行) (.*)/,
+        /^网易云 ([0-9]+)$/,
+        /** @param { PostTypes.GroupMessageType } msg */
+        async (argv, msg) => {
+            let record_link = 'http://music.163.com/song/media/outer/url?id=' + argv[1]
+
+            CqApi.sendGroupMessageApi({
+                group_id: msg.group_id,
+                message: `[CQ:record,file=${record_link}]`,
+            })
+        }
+    ],
+    [
+        /^(执行|运行) ([\S\s]*)/,
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkCoreAdminOrThrow(msg.sender.user_id)
