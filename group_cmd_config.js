@@ -196,7 +196,9 @@ const configList = [
         /^视频链接$/,
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
-            let l = /\[CQ:video,.*url=(.*),file_id=.*\]/.exec((await CqApi.getMessageApi({ message_id: getReplyMessageId(msg) })).raw_message)
+            let replyMsg = await CqApi.getMessageApi({ message_id: getReplyMessageId(msg) })
+
+            let l = /\[CQ:video,.*url=(.*),file_id=.*\]/.exec(replyMsg.raw_message)
 
             let video = unescapeHTMLEntities(l[1])
 
