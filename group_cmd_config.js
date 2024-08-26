@@ -95,7 +95,7 @@ const configList = [
         async (argv, msg) => {
             checkAdminOrThrow(msg.sender.user_id)
 
-            await CqApi.sendGroupForwardMessageApi({
+            await CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
                 message: `[CQ:reply,id=${msg.message_id}]在重启啦~`,
             })
