@@ -15,6 +15,8 @@ let authCode = Math.random() + ""
 
 console.log("添加授权: /满月 auth " + authCode)
 
+// 狗头: [CQ:face,id=277]
+
 const configList = [
     [
         /^auth ([^ ]*) ?([^ ]*)? ?(.*)?/,
