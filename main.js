@@ -105,7 +105,7 @@ linkServer(botConfig.onebot_server).then((loginInfo) => {
                             data: {
                                 name: '满月',
                                 uin: '114514',
-                                content: textMsg(`💮本指令请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮`)
+                                content: textMsg(`💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮`)
                             }
                         },
                     ],
