@@ -75,11 +75,17 @@ const configList = [
         async (argv, msg) => {
             checkCoreAdminOrThrow(msg.sender.user_id)
 
-            let utils = require('./utils')
+            let send = (msg) => CqApi.sendGroupMessageApi({ group_id: msg.group_id, message: msg + '' })
 
-            CqApi.sendGroupForwardMessageApi({
+            let func = new Function('utils', 'argv', 'msg', 'send', 'return async (utils, argv, msg, send) => {' + decodeURIComponent(unescapeHTMLEntities(argv[2])) + '}')()
+
+            let res = await func(require('./utils'), argv, msg, send)
+
+            let result = (res ? `💮返回结果💮 -> ${res}`: '已经执行了，但是执行的代码没有返回值')
+
+            CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
-                message: `[CQ:reply,id=${msg.message_id}]${new Function('utils', 'argv', 'msg', decodeURIComponent(unescapeHTMLEntities(argv[2])))(config, checkAdminOrThrow, argv, msg)}`,
+                message: res.length > 100 ? makeSingleForwardMessage(`${result}\n\n💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮`) : `[CQ:reply,id=${msg.message_id}]${result}`,
             })
         }
     ],
