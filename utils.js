@@ -136,10 +136,11 @@ function formatDate(tms, format) {
 /**
  * 从一组数据中找一个非Null的值
  * @param { any[] } list 一组数据
- * @returns { any } 非Null的数据，若均Null则返回Null
+ *@param { any } defaultValue 默认值
+ * @returns { any } 非 null 的数据，若均 null 则返回 defaultValue
  */
-function findNonNull(ls) {
-    let a = null
+function findNonNull(ls, defaultValue) {
+    let a = defaultValue
     ls.forEach((v) => {
         if (v) a = v
     })
