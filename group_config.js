@@ -156,7 +156,7 @@ const configList = [
                         data: {
                             name: '满月',
                             uin: '114514',
-                            content: '↓以下是该 JSON 卡片的一些信息'
+                            content: '💮去你妈的 JSON 卡片消息💮'
                         }
                     },
                     {
@@ -177,7 +177,7 @@ const configList = [
                         data: {
                             name: '满月',
                             uin: '114514',
-                            content: textMsg('QJSON源代码: ' + JSON.stringify(JSON.parse(msg.message[0].data.data)) + '\n\n💮此 JSON卡片 发送者: ' + `${msg.sender.nickname}(${msg.sender.user_id})💮`),
+                            content: textMsg('💮QJSON源代码💮\n' + JSON.stringify(JSON.parse(msg.message[0].data.data)) + '\n\n💮此 JSON卡片 发送者: ' + `${msg.sender.nickname}(${msg.sender.user_id})💮`),
                         }
                     },
                 ]
