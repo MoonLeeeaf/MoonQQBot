@@ -126,7 +126,7 @@ const configList = [
 
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
-                message: res.length > 100 ? makeSingleForwardMessage(`${result}\n\n💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮`) : `[CQ:reply,id=${msg.message_id}]${result}`,
+                message: (res ? res.length > 100 : false) ? makeSingleForwardMessage(`${result}\n\n💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮`) : `[CQ:reply,id=${msg.message_id}]${result}`,
             })
         }
     ],
