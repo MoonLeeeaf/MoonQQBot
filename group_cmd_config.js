@@ -60,6 +60,35 @@ const configList = [
         }
     ],
     [
+        /^看二次元$/,
+        /** @param { PostTypes.GroupMessageType } msg */
+        async (argv, msg) => {
+            let apiList = [
+                'https://t.mwm.moe/fj',
+                'https://imgapi.xl0408.top/index.php',
+            ]
+
+            CqApi.sendGroupMessageApi({
+                group_id: msg.group_id,
+                message: `[CQ:reply,id=${msg.message_id}]💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮[CQ:image,file=${apiList[Math.floor(Math.random() * apiList.length)]}]`,
+            })
+        }
+    ],
+    [
+        /^看美女$/,
+        /** @param { PostTypes.GroupMessageType } msg */
+        async (argv, msg) => {
+            let apiList = [
+                'https://api.lolimi.cn/API/meizi/api.php?type=image',
+            ]
+
+            CqApi.sendGroupMessageApi({
+                group_id: msg.group_id,
+                message: `[CQ:reply,id=${msg.message_id}]💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮[CQ:image,file=${apiList[Math.floor(Math.random() * apiList.length)]}]`,
+            })
+        }
+    ],
+    [
         /^网易云 ([0-9]+)$/,
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
