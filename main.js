@@ -144,14 +144,14 @@ linkServer(botConfig.onebot_server).then((loginInfo) => {
                     }
                 }
 
-                if (!reg.test(msg.raw_message))
-                    // 不需要使用指定语句调用的命令
-                    forEach(group_config)
-                else
+                if (reg.test(msg.raw_message))
                     // 需要使用指定语句调用的命令
                     forEach(group_cmd_config)
-
-                forEach(built_in_config)
+                    forEach(built_in_config)
+                else {
+                    // 不需要使用指定语句调用的命令
+                    forEach(group_config)
+                }
             }
         }
     ])
