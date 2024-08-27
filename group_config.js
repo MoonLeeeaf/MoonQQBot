@@ -77,8 +77,13 @@ const configList = [
             if (!slept)
                 if (time_ok) config.晚安计数++
                 else { }
-            else if (new Date(config.晚安列表[msg.sender.user_id]).getDate() != new Date().getDate())
+            else if (new Date(config.晚安列表[msg.sender.user_id]).getDate() != new Date().getDate()) {
                 config.晚安列表[msg.sender.user_id] = null
+                // byd上面删了你还忘了取消了是吧
+                slept = false
+                // 都跨日了那必须是 time_ok 的啊
+                config.晚安计数++
+            }
 
             let success = [
                 `晚安${msg.sender.nickname}, 你是第${config.晚安计数}个睡觉的~`,
@@ -91,7 +96,9 @@ const configList = [
                 '要睡你去睡! 别拉着我!',
             ]
 
-            let useList = (time_ok ? (slept ? failed_slept : success) : failed_time)
+            let useList = (time_ok ?
+                (slept ? failed_slept : success)
+                : failed_time)
 
             if (argv[1] == "ignore_time_limit")
                 useList = success
