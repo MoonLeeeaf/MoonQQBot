@@ -6,7 +6,7 @@
 
 const DataBase = require('./db')
 
-const { decode : unescapeHTMLEntities } = require('html-entities')
+const { decode: unescapeHTMLEntities } = require('html-entities')
 
 /**
  * 获取回复的消息的 msgid
@@ -31,8 +31,20 @@ function getAt(str) {
     try {
         return /\[CQ:at,qq=([0-9]+)/.exec(str)[1]
     } catch (e) {
-        console.log(`获取 at QQ 号失败(${str})`)
-        return 0
+        return null
+    }
+}
+
+/**
+ * 获取所@的 QQ 号或者qq数字
+ * @param { String } str CQ码
+ * @returns { String } QQ号
+ */
+ function getAtOrQQ(str) {
+    try {
+        return /\[CQ:at,qq=([0-9]+)/.exec(str)[1]
+    } catch (e) {
+        return str
     }
 }
 
@@ -181,9 +193,67 @@ function textMsg(msg) {
     ]
 }
 
+/**
+ * 清理链接参数 以及草死短链接
+ * @param { String } url 任意链接
+ * @returns { Promise<String> } 清理后的链接
+ */
+async function cleanUrl(url) {
+    try {
+        /**
+          * 操烂短链接小学
+          * @param { String } url 任意链接
+          * @returns { Promise<a> } 清理后的链接
+          */
+        async function fuckShortUrl(url) {
+            let a = {
+                /**
+                 * 链接
+                 * @type String
+                 */
+                url: url,
+                /**
+                 * 在还原前是否为短链接
+                 * @type Boolean
+                 */
+                isShortUrl: true,
+            }
+            let re = await fetch(url, { redirect: 'manual' })
+            let red = re.headers.get('Location')
+
+            // 在对非短链接请求时 Location 会以 / 开头 妈的坑死人了
+            if (red && !red.startsWith('/')) {
+                a.url = red
+            } else {
+                a.isShortUrl = false
+            }
+
+            a.url = a.url
+
+            return a
+        }
+
+        let u = await fuckShortUrl(url)
+        let u2 = await fuckShortUrl(u.url)
+        if (u2.isShortUrl) return await cleanUrl(u2.url)
+
+        /* let rule = {
+            'www.bilibili.com': /?/,
+        } */
+
+        url = u.url
+
+        return url
+    } catch (e) {
+        console.log('短链接还原失败! ' + e)
+        return url
+    }
+}
+
 module.exports = {
     getReplyMessageId: getReplyMessageId,
     getAt: getAt,
+    getAtOrQQ: getAtOrQQ,
     unescapeHTMLEntities: unescapeHTMLEntities,
     checkAdmin: checkAdmin,
     checkAdminOrThrow: checkAdminOrThrow,
@@ -195,6 +265,7 @@ module.exports = {
     makeSingleForwardMessage: makeSingleForwardMessage,
     findNonNull, findNonNull,
     textMsg: textMsg,
+    cleanUrl: cleanUrl,
     adminList: adminList,
     adminDB: adminDB,
     coreAdminList: coreAdminList,

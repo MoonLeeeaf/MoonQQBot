@@ -12,7 +12,7 @@ const versionName = 'v1.0.0'
 const { CqApi, default: linkServer, useMod, ModTypes, PostTypes } = require('cqhttp-ts')
 
 const child_process = require('node:child_process')
-const { textMsg, config, setAdmin } = require('./utils')
+const { textMsg, config, setAdmin, makeSingleForwardMessage } = require('./utils')
 
 const io = require('./io')
 
@@ -138,7 +138,7 @@ linkServer(botConfig.onebot_server).then((loginInfo) => {
                             if (argv == null) argv = []
                             i[1](argv, msg).catch((e) => CqApi.sendGroupMessageApi({
                                 group_id: msg.group_id,
-                                message: `[CQ:reply,id=${msg.message_id}]喵呜呜呜呜! 出错了啦!\n${e}`,
+                                message: (e ? (e + '').length > 100 : false) ? makeSingleForwardMessage(`代码执行异常! ${e}\n\n💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮`) : `[CQ:reply,id=${msg.message_id}]喵呜呜呜呜! 出错了啦!\n${e}`,
                             }))
                         }
                     }

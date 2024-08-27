@@ -6,7 +6,7 @@
 
 const { CqApi, ModTypes, PostTypes } = require('cqhttp-ts')
 
-const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdminOrThrow, setAdmin, configDB, config, checkCoreAdminOrThrow, setCoreAdmin, checkCoreAdmin, checkAdmin, makeSingleForwardMessage, cleanUrl } = require('./utils')
+const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdminOrThrow, setAdmin, configDB, config, checkCoreAdminOrThrow, setCoreAdmin, checkCoreAdmin, checkAdmin, makeSingleForwardMessage, cleanUrl, getAtOrQQ } = require('./utils')
 
 
 // ======== 功能配置处 ========
@@ -75,12 +75,12 @@ const configList = [
         }
     ],
     [
-        /^清链 (.*)$/,
+        /^清理?链接? (.*)$/,
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
-                message: `[CQ:reply,id=${msg.message_id}]帮你清理好了呢~ 看: ${cleanUrl(argv[1])}`,
+                message: `[CQ:reply,id=${msg.message_id}]帮你清理好了呢~ 看: ${await cleanUrl(argv[1])}`,
             })
         }
     ],
@@ -268,19 +268,35 @@ const configList = [
         }
     ],
     [
-        /^降权/,
+        /^authCode$/,
+        /** @param { PostTypes.GroupMessageType } msg */
+        async (argv, msg) => {
+            console.log('授权: /满月 auth ' + authCode)
+
+            CqApi.sendGroupMessageApi({
+                group_id: msg.group_id,
+                message: `[CQ:reply,id=${msg.message_id}]请看VCR (Console)`,
+            })
+        }
+    ],
+    [
+        /^降权 ?(.*)?$/,
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkAdminOrThrow(msg.sender.user_id)
 
-            if (checkCoreAdmin(msg.sender.user_id))
-                setCoreAdmin(msg.sender.user_id, false)
-            else
-                setAdmin(msg.sender.user_id, false)
+            let qq = getAtOrQQ(argv[1])
+            if (!/[0-9]+/.test(qq)) qq = msg.sender.user_id
+
+            if (checkCoreAdmin(qq)) {
+                setCoreAdmin(qq, false)
+                setAdmin(qq, true)
+            } else
+                setAdmin(qq, false)
 
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
-                message: `[CQ:reply,id=${msg.message_id}]满月娘已经按要求操作啦~`,
+                message: `[CQ:reply,id=${msg.message_id}]满月娘已经按要求操作啦~ (被操作者: ${qq}, 降权到了: ${checkAdmin(qq) ? '普通' : '无管理'})`,
             })
         }
     ],
