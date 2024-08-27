@@ -6,7 +6,7 @@
 
 const { CqApi, ModTypes, PostTypes } = require('cqhttp-ts')
 
-const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdminOrThrow, setAdmin, configDB, config, checkCoreAdminOrThrow, setCoreAdmin, checkCoreAdmin, checkAdmin, makeSingleForwardMessage } = require('./utils')
+const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdminOrThrow, setAdmin, configDB, config, checkCoreAdminOrThrow, setCoreAdmin, checkCoreAdmin, checkAdmin, makeSingleForwardMessage, cleanUrl } = require('./utils')
 
 
 // ======== 功能配置处 ========
@@ -71,6 +71,16 @@ const configList = [
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
                 message: `[CQ:reply,id=${msg.message_id}]💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮[CQ:image,file=${apiList[Math.floor(Math.random() * apiList.length)]}]`,
+            })
+        }
+    ],
+    [
+        /^清链 (.*)$/,
+        /** @param { PostTypes.GroupMessageType } msg */
+        async (argv, msg) => {
+            CqApi.sendGroupMessageApi({
+                group_id: msg.group_id,
+                message: `[CQ:reply,id=${msg.message_id}]帮你清理好了呢~ 看: ${cleanUrl(argv[1])}`,
             })
         }
     ],
