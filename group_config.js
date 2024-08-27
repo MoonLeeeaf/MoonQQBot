@@ -168,6 +168,7 @@ const configList = [
                                 inner_meta.pcJumpUrl, // 短视频分享 电脑端专用链 考虑到不支持 mqqapi 跳转
                                 inner_meta.jumpUrl, // 标准卡片
                                 inner_meta.jump_url, // “小”程序(目前只看到B站的分享卡片是这样的)
+                                inner_meta.qqdocurl, // “小”程序(B站我操你妈 天天就会发卡片 还tm这么不规范 垃圾小程序也是 服了)
                             ])
                         }
                     },
