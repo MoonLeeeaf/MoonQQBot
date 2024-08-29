@@ -27,11 +27,11 @@ function getReplyMessageId(msg) {
  * @param { String } str CQ码
  * @returns { String } QQ号
  */
-function getAt(str) {
+function getAtOrThrow(str) {
     try {
         return /\[CQ:at,qq=([0-9]+)/.exec(str)[1]
     } catch (e) {
-        return null
+        throw new TypeError('ATQQ格式不正确, 或非正常AT!')
     }
 }
 
@@ -40,10 +40,12 @@ function getAt(str) {
  * @param { String } str CQ码
  * @returns { String } QQ号
  */
- function getAtOrQQ(str) {
+ function getAtOrQQOrThrow(str) {
     try {
         return /\[CQ:at,qq=([0-9]+)/.exec(str)[1]
     } catch (e) {
+        if (!/[0-9]+/.test(str))
+            throw new TypeError('非正常QQ号, 或者非正常AT!')
         return str
     }
 }
@@ -279,10 +281,23 @@ function checkApiLimitOrThrow() {
     }
 }
 
+/**
+ * 顾名思义
+ * @param { Function } func
+ * @param { any } returnValueOrFuncReturned
+ */
+function tryCatch(func, ret) {
+    try {
+        return func()
+    } catch(e) {
+        return ret
+    }
+}
+
 module.exports = {
     getReplyMessageId: getReplyMessageId,
-    getAt: getAt,
-    getAtOrQQ: getAtOrQQ,
+    getAtOrThrow: getAtOrThrow,
+    getAtOrQQOrThrow: getAtOrQQOrThrow,
     unescapeHTMLEntities: unescapeHTMLEntities,
     checkAdmin: checkAdmin,
     checkAdminOrThrow: checkAdminOrThrow,
@@ -296,6 +311,7 @@ module.exports = {
     checkApiLimitOrThrow: checkApiLimitOrThrow,
     textMsg: textMsg,
     cleanUrl: cleanUrl,
+    tryCatch: tryCatch,
     adminList: adminList,
     adminDB: adminDB,
     coreAdminList: coreAdminList,

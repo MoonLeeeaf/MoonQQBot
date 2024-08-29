@@ -7,7 +7,7 @@
 const { CqApi, ModTypes, PostTypes } = require('cqhttp-ts')
 const DataBase = require('./db')
 
-const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdmin, configDB, config, makeSingleForwardMessage, findNonNull, textMsg, cleanUrl } = require('./utils')
+const { unescapeHTMLEntities, getAtOrThrow, getReplyMessageId, checkAdmin, configDB, config, makeSingleForwardMessage, findNonNull, textMsg, cleanUrl } = require('./utils')
 
 // ======== 功能配置处 ========
 

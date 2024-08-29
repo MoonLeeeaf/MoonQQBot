@@ -6,7 +6,7 @@
 
 const { CqApi, ModTypes, PostTypes } = require('cqhttp-ts')
 
-const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdminOrThrow, setAdmin, configDB, config, checkCoreAdminOrThrow, setCoreAdmin, checkCoreAdmin, checkAdmin, makeSingleForwardMessage, cleanUrl, getAtOrQQ, checkApiLimitOrThrow } = require('./utils')
+const { unescapeHTMLEntities, getAtOrThrow, getReplyMessageId, checkAdminOrThrow, setAdmin, configDB, config, checkCoreAdminOrThrow, setCoreAdmin, checkCoreAdmin, checkAdmin, makeSingleForwardMessage, cleanUrl, getAtOrQQOrThrow, checkApiLimitOrThrow, tryCatch } = require('./utils')
 
 // ======== 功能配置处 ========
 
@@ -23,7 +23,7 @@ const configList = [
         async (argv, msg) => {
             if (argv[1] == authCode) {
                 let set = setAdmin
-                let at = getAt(argv[2])
+                let at = tryCatch(() => getAtOrThrow(argv[2]), 0)
 
                 if (argv[3] == 'core' || (at == 0 && argv[2] == 'core'))
                     set = setCoreAdmin
@@ -286,8 +286,7 @@ const configList = [
         async (argv, msg) => {
             checkAdminOrThrow(msg.sender.user_id)
 
-            let qq = getAtOrQQ(argv[1])
-            if (!/[0-9]+/.test(qq)) qq = msg.sender.user_id
+            let qq = getAtOrQQOrThrow(argv[1])
 
             if (checkCoreAdmin(qq)) {
                 setCoreAdmin(qq, false)
@@ -317,13 +316,13 @@ const configList = [
             else
                 CqApi.setGroupBanApi({
                     group_id: msg.group_id,
-                    user_id: getAt(argv[1]),
+                    user_id: getAtOrThrow(argv[1]),
                     duration: dur,
                 })
 
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
-                message: `[CQ:reply,id=${msg.message_id}]满月娘已经按要求操作啦~ (被操作者 ${getAt(argv[1])})`,
+                message: `[CQ:reply,id=${msg.message_id}]满月娘已经按要求操作啦~ (被操作者 ${getAtOrThrow(argv[1])})`,
             })
         }
     ],
