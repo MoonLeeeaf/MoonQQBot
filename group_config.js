@@ -7,7 +7,7 @@
 const { CqApi, ModTypes, PostTypes } = require('cqhttp-ts')
 const DataBase = require('./db')
 
-const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdmin, configDB, config, makeSingleForwardMessage, findNonNull, textMsg } = require('./utils')
+const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdmin, configDB, config, makeSingleForwardMessage, findNonNull, textMsg, cleanUrl } = require('./utils')
 
 // ======== 功能配置处 ========
 
@@ -125,7 +125,24 @@ const configList = [
 
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
-                message: makeSingleForwardMessage(textMsg('💮本条 Markdown 消息的源代码💮\n' + decodeURIComponent(unescapeHTMLEntities(msg.raw_message)) + '\n\n💮此 Markdown 消息发送者: ' + `${msg.sender.nickname}(${msg.sender.user_id})💮`))
+                message: [
+                    {
+                        type: "node",
+                        data: {
+                            name: '满月',
+                            uin: '114514',
+                            content: '💮去你妈的 QMarkdown 卡片消息💮'
+                        }
+                    },
+                    {
+                        type: "node",
+                        data: {
+                            name: '满月',
+                            uin: '114514',
+                            content: textMsg('💮QMD源代码💮\n' + decodeURIComponent(unescapeHTMLEntities(msg.raw_message)) + '\n\n💮此 Markdown卡片 发送者: ' + `${msg.sender.nickname}(${msg.sender.user_id})💮`),
+                        }
+                    },
+                ]
             })
         }
     ],
@@ -171,13 +188,13 @@ const configList = [
                         data: {
                             name: '满月',
                             uin: '114514',
-                            content: findNonNull([
+                            content: await cleanUrl(findNonNull([
                                 inner_meta.pcJumpUrl, // 短视频分享 电脑端专用链 考虑到不支持 mqqapi 跳转
                                 inner_meta.jumpUrl, // 标准卡片
                                 inner_meta.jump_url, // “小”程序
                                 inner_meta.qqdocurl, // “小”程序(B站我操你妈 天天就会发卡片 还tm这么不规范 垃圾小程序也是 服了)
                                 inner_meta.link, // 频道Bot卡片
-                            ])
+                            ]))
                         }
                     },
                     {

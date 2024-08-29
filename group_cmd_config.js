@@ -6,8 +6,7 @@
 
 const { CqApi, ModTypes, PostTypes } = require('cqhttp-ts')
 
-const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdminOrThrow, setAdmin, configDB, config, checkCoreAdminOrThrow, setCoreAdmin, checkCoreAdmin, checkAdmin, makeSingleForwardMessage, cleanUrl, getAtOrQQ } = require('./utils')
-
+const { unescapeHTMLEntities, getAt, getReplyMessageId, checkAdminOrThrow, setAdmin, configDB, config, checkCoreAdminOrThrow, setCoreAdmin, checkCoreAdmin, checkAdmin, makeSingleForwardMessage, cleanUrl, getAtOrQQ, checkApiLimitOrThrow } = require('./utils')
 
 // ======== 功能配置处 ========
 
@@ -63,6 +62,7 @@ const configList = [
         /^看二次元$/,
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
+            checkApiLimitOrThrow()
             let apiList = [
                 'https://t.mwm.moe/fj',
                 'https://imgapi.xl0408.top/index.php',
@@ -88,6 +88,7 @@ const configList = [
         /^看美女$/,
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
+            checkApiLimitOrThrow()
             let apiList = [
                 'https://api.lolimi.cn/API/meizi/api.php?type=image',
             ]

@@ -237,16 +237,45 @@ async function cleanUrl(url) {
         let u2 = await fuckShortUrl(u.url)
         if (u2.isShortUrl) return await cleanUrl(u2.url)
 
-        /* let rule = {
-            'www.bilibili.com': /?/,
-        } */
+        let rule = [
+            [
+                /\/\/www.bilibili.com\/video/,
+                (url) => {
+                    let i = url.indexOf('?')
+                    if (i == -1) i = url.length + 1
+                    return url.substring(0, i)
+                },
+            ],
+        ]
 
         url = u.url
 
+        for (let rle of rule) {
+            if (rle[0].test(url)) {
+                url = rle[1](url)
+                break
+            }
+        }
+
         return url
     } catch (e) {
-        console.log('短链接还原失败! ' + e)
+        console.log('短链接还原失败! ' + e + `(${url})`)
         return url
+    }
+}
+
+let checkApiLimit_times = 0
+let checkApiLimit_time
+/**
+ * 检测接口是否请求到限制
+ */
+function checkApiLimitOrThrow() {
+    checkApiLimit_times++
+    if (Date.now() - checkApiLimit_time > 5)
+        checkApiLimit_times = 0
+    if (checkApiLimit_times > 3) {
+        checkApiLimit_time = Date.now()
+        throw new Error('啊啊啊啊我要忙不过来了啦!!!!! (请求过多,请稍后再试)')
     }
 }
 
@@ -264,6 +293,7 @@ module.exports = {
     formatDate: formatDate,
     makeSingleForwardMessage: makeSingleForwardMessage,
     findNonNull, findNonNull,
+    checkApiLimitOrThrow: checkApiLimitOrThrow,
     textMsg: textMsg,
     cleanUrl: cleanUrl,
     adminList: adminList,
