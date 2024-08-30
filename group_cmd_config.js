@@ -54,7 +54,7 @@ const configList = [
         async (argv, msg) => {
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
-                message: `[CQ:reply,id=${msg.message_id}]当前权限等级: ${checkCoreAdmin(msg.sender.user_id) ? '核心' : (checkAdmin(msg.sender.user_id) ? '普通' : '无管理' )}`,
+                message: `[CQ:reply,id=${msg.message_id}]当前权限等级: ${checkCoreAdmin(msg.sender.user_id) ? '核心' : (checkAdmin(msg.sender.user_id) ? '普通' : '无管理')}`,
             })
         }
     ],
@@ -123,7 +123,7 @@ const configList = [
 
             let res = await func(require('./utils'), argv, msg, send)
 
-            let result = (res ? `💮返回结果💮 -> ${res}`: '已经执行了，但是执行的代码没有返回值')
+            let result = (res ? `💮返回结果💮 -> ${res}` : '已经执行了，但是执行的代码没有返回值')
 
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
@@ -297,6 +297,108 @@ const configList = [
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
                 message: `[CQ:reply,id=${msg.message_id}]满月娘已经按要求操作啦~ (被操作者: ${qq}, 降权到了: ${checkAdmin(qq) ? '普通' : '无管理'})`,
+            })
+        }
+    ],
+    [
+        /^早安 ?(ignore_time_limit)?$/,
+        /** @param { PostTypes.GroupMessageType } msg */
+        async (argv, msg) => {
+            if (!config.晚安列表) config.晚安列表 = {}
+
+            let success = [
+                `早上好，${msg.sender.nickname}喵~ 你一共睡了${(Date.now() - config.晚安列表[msg.sender.user_id]) / 1000 / 60 / 60}小时 祝你今天也有个愉快的心情哦喵~`,
+            ]
+            let failed_time_early = [
+                '早上...早上个屁啊! 你看看几点了都!',
+                `${msg.sender.nickname}! 你是不是熬夜了!`,
+                '昨晚...是不是太嗨了...',
+                `${msg.sender.nickname}! 别又熬穿了!`,
+                '睡不着吗? 要不我陪你睡吧~'
+            ]
+            let failed_time_later = [
+                '干脆睡到下午得了! 笨蛋!',
+                '哇哦... 现在几点了你才起床...',
+                '你是打算中午饭和晚饭一起吃吗~ 那我们一起吃饭吧!',
+                `我说你啊 ${msg.sender.nickname}, 怕不是在过着 UTC+4 的生活!`,
+            ]
+            let failed_time_very_later = [
+                '干脆睡到下午得了! 笨蛋!',
+                '哇哦... 现在几点了你才起床...',
+                '你是打算中午饭和晚饭一起吃吗~ 那我们一起吃饭吧!',
+                `我说你啊 ${msg.sender.nickname}, 怕不是在过着 UTC+4 的生活!`,
+            ]
+
+            let useList
+            if (argv[1] == "ignore_time_limit")
+                useList = success
+            else if (new Date().getHours() >= 5 && new Date().getHours() <= 18)
+                if (new Date().getHours() <= 10) {
+                    useList = success
+                } else if (new Date().getHours() <= 12)
+                    useList = failed_time_later
+                else
+                    useList = failed_time_very_later
+            else
+                useList = failed_time_early
+
+            configDB.update(config)
+
+            CqApi.sendGroupMessageApi({
+                group_id: msg.group_id,
+                message: useList[Math.floor(Math.random() * useList.length)],
+            })
+        }
+    ],
+    [
+        /^晚安 ?(ignore_time_limit)?$/,
+        /** @param { PostTypes.GroupMessageType } msg */
+        async (argv, msg) => {
+            if (!config.晚安计数 || (new Date(config.晚安_最后时间).getDate() != new Date().getDate())) config.晚安计数 = 0
+            if (!config.晚安列表) config.晚安列表 = {}
+
+            let time_ok = new Date().getHours() <= 6 || new Date().getHours() >= 20
+
+            let slept = config.晚安列表[msg.sender.user_id] != null
+
+            if (!slept)
+                if (time_ok) config.晚安计数++
+                else { }
+            else if (new Date(config.晚安列表[msg.sender.user_id]).getDate() != new Date().getDate()) {
+                config.晚安列表[msg.sender.user_id] = null
+                // byd上面删了你还忘了取消了是吧
+                slept = false
+                // 都跨日了那必须是 time_ok 的啊
+                config.晚安计数++
+            }
+
+            let success = [
+                `晚安${msg.sender.nickname}, 你是第${config.晚安计数}个睡觉的~`,
+            ]
+            let failed_slept = [
+                '你不是睡过了嘛! 哼!',
+            ]
+            let failed_time = [
+                '这么早睡觉? 再陪我玩会嘛...',
+                '要睡你去睡! 别拉着我!',
+            ]
+
+            let useList = (time_ok ?
+                (slept ? failed_slept : success)
+                : failed_time)
+
+            if (argv[1] == "ignore_time_limit")
+                useList = success
+
+            if (time_ok && !slept) config.晚安列表[msg.sender.user_id] = Date.now()
+
+            config.晚安_最后时间 = Date.now()
+
+            configDB.update(config)
+
+            CqApi.sendGroupMessageApi({
+                group_id: msg.group_id,
+                message: useList[Math.floor(Math.random() * useList.length)],
             })
         }
     ],
