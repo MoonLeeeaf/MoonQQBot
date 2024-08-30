@@ -170,6 +170,7 @@ const configList = [
                 meta.detail_1, // “小”程序(目前只看到B站的分享卡片是这样的)
                 meta.contact, // 推荐群聊 推荐好友
                 meta.music, // 阴乐
+                meta.pic, // 图片卡片
             ], { jumpUrl: '无法获取卡片点击链接' }) // 玩nm 不支持的卡片类型 阿弥诺斯
 
             CqApi.sendGroupMessageApi({
