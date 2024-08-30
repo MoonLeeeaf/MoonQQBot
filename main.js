@@ -65,8 +65,6 @@ linkServer(botConfig.onebot_server).then((loginInfo) => {
                 group_config.forEach((v) => {
                     if (v) b.push(v[1])
                 })
-                if (a.length == 0) a.push('暂无指令')
-                if (b.length == 0) b.push('暂无指令')
 
                 CqApi.sendGroupForwardMessageApi({
                     group_id: msg.group_id,
