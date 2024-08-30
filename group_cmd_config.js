@@ -24,7 +24,7 @@ const configList = [
         async (argv, msg) => {
             if (argv[1] == authCode) {
                 let set = setAdmin
-                let at = tryCatch(() => getAtOrThrow(argv[2]), 0)
+                let at = tryCatch(() => getAtOrQQOrThrow(argv[2]), 0)
 
                 if (argv[3] == 'core' || (at == 0 && argv[2] == 'core'))
                     set = setCoreAdmin
@@ -437,7 +437,7 @@ const configList = [
             else
                 CqApi.setGroupBanApi({
                     group_id: msg.group_id,
-                    user_id: getAtOrThrow(argv[1]),
+                    user_id: getAtOrQQOrThrow(argv[1]),
                     duration: dur,
                 })
 
