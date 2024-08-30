@@ -7,7 +7,7 @@
 // 记得改版本号, 记得改版本号, 记得改版本号
 // 记得改 package.json, 记得改 package.json, 记得改 package.json
 
-const versionName = 'v1.1.0'
+const versionName = 'v1.2.0'
 
 const { CqApi, default: linkServer, useMod, ModTypes, PostTypes } = require('cqhttp-ts')
 

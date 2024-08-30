@@ -40,7 +40,7 @@ function getAtOrThrow(str) {
  * @param { String } str CQ码
  * @returns { String } QQ号
  */
- function getAtOrQQOrThrow(str) {
+function getAtOrQQOrThrow(str) {
     try {
         return /\[CQ:at,qq=([0-9]+)/.exec(str)[1]
     } catch (e) {

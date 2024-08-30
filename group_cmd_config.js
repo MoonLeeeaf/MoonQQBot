@@ -421,13 +421,15 @@ const configList = [
         }
     ],
     [
-        /^禁言 (.*) (.*)/,
+        /^禁言 ([^ ]*) (.*)/,
         '禁言 <@/QQ/all> <时间>',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkAdminOrThrow(msg.sender.user_id)
 
             let dur = parseInt(argv[2])
+            
+            let qq = tryCatch(() => getAtOrQQOrThrow(argv[1]), null)
 
             if (argv[1] == 'all')
                 CqApi.setGroupWholeBanApi({
@@ -437,13 +439,13 @@ const configList = [
             else
                 CqApi.setGroupBanApi({
                     group_id: msg.group_id,
-                    user_id: getAtOrQQOrThrow(argv[1]),
+                    user_id: qq,
                     duration: dur,
                 })
 
             CqApi.sendGroupMessageApi({
                 group_id: msg.group_id,
-                message: `[CQ:reply,id=${msg.message_id}]满月娘已经按要求操作啦~ (被操作者 ${getAtOrThrow(argv[1])})`,
+                message: `[CQ:reply,id=${msg.message_id}]满月娘已经按要求操作啦~ (被操作者 ${qq})`,
             })
         }
     ],
