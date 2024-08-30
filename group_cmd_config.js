@@ -19,6 +19,7 @@ console.log("添加授权: /满月 auth " + authCode)
 const configList = [
     [
         /^auth ([^ ]*) ?([^ ]*)? ?(.*)?/,
+        'auth <验证码> <用户/core> [core]',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             if (argv[1] == authCode) {
@@ -50,6 +51,7 @@ const configList = [
     ],
     [
         /^权限$/,
+        '权限',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             CqApi.sendGroupMessageApi({
@@ -60,6 +62,7 @@ const configList = [
     ],
     [
         /^看二次元$/,
+        '看二次元',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkApiLimitOrThrow()
@@ -76,6 +79,7 @@ const configList = [
     ],
     [
         /^清理?链接? (.*)$/,
+        '清(理)链(接) <链接>',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             CqApi.sendGroupMessageApi({
@@ -86,6 +90,7 @@ const configList = [
     ],
     [
         /^看美女$/,
+        '看美女',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkApiLimitOrThrow()
@@ -101,6 +106,7 @@ const configList = [
     ],
     [
         /^网易云 ([0-9]+)$/,
+        '网易云 <音乐ID>',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             let record_link = 'http://music.163.com/song/media/outer/url?id=' + argv[1]
@@ -113,6 +119,7 @@ const configList = [
     ],
     [
         /^(执行|运行) ([\S\s]*)/,
+        '(运行|执行) <JS代码>',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkCoreAdminOrThrow(msg.sender.user_id)
@@ -133,6 +140,7 @@ const configList = [
     ],
     [
         /^重启$/,
+        '重启',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkAdminOrThrow(msg.sender.user_id)
@@ -146,6 +154,7 @@ const configList = [
     ],
     [
         /^QMD (开|关)/,
+        'QMD <开/关>',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             if (!config.反qmd) config.反qmd = {}
@@ -170,6 +179,7 @@ const configList = [
     ],
     [
         /^QJSON (开|关)/,
+        'QJSON <开/关>',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             if (!config.反json) config.反json = {}
@@ -194,6 +204,7 @@ const configList = [
     ],
     [
         /^(加精|设精|设置精华|设为精华)$/,
+        '{reply} (加精|设精|设置精华|设为精华)',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkAdminOrThrow(msg.sender.user_id)
@@ -211,6 +222,7 @@ const configList = [
         }],
     [
         /^源代码$/,
+        '{reply} 源代码',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             let mid = getReplyMessageId(msg)
@@ -236,6 +248,7 @@ const configList = [
     ],
     [
         /^视频链接$/,
+        '{reply} 视频链接',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             let replyMsg = await CqApi.getMessageApi({ message_id: getReplyMessageId(msg) })
@@ -252,6 +265,7 @@ const configList = [
     ],
     [
         /^复读 ?(.*)/,
+        '[{reply}] 复读 [内容]',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkAdminOrThrow(msg.sender.user_id)
@@ -270,6 +284,7 @@ const configList = [
     ],
     [
         /^authCode$/,
+        'authCode',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             console.log('授权: /满月 auth ' + authCode)
@@ -282,6 +297,7 @@ const configList = [
     ],
     [
         /^降权 ?(.*)?$/,
+        '降权',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkAdminOrThrow(msg.sender.user_id)
@@ -302,6 +318,7 @@ const configList = [
     ],
     [
         /^早安 ?(ignore_time_limit)?$/,
+        '早安',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             if (!config.晚安列表) config.晚安列表 = {}
@@ -352,6 +369,7 @@ const configList = [
     ],
     [
         /^晚安 ?(ignore_time_limit)?$/,
+        '晚安',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             if (!config.晚安计数 || (new Date(config.晚安_最后时间).getDate() != new Date().getDate())) config.晚安计数 = 0
@@ -404,6 +422,7 @@ const configList = [
     ],
     [
         /^禁言 (.*) (.*)/,
+        '禁言 <@/QQ/all> <时间>',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkAdminOrThrow(msg.sender.user_id)

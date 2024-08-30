@@ -14,6 +14,7 @@ const { unescapeHTMLEntities, getAtOrThrow, getReplyMessageId, checkAdmin, confi
 const configList = [
     [
         /^\[CQ:markdown,.*/,
+        null,
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             if (!config.反qmd) config.反qmd = {}
@@ -45,6 +46,7 @@ const configList = [
     ],
     [
         /^\[CQ:json,data=.*/,
+        null,
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             if (!config.反json) config.反json = {}

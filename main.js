@@ -53,17 +53,20 @@ linkServer(botConfig.onebot_server).then((loginInfo) => {
 
     const built_in_config = [
         [
-            /^(指令)?(菜单|指令列表)$/,
+            /^(指令菜单|指令列表|菜单)$/,
+            '(指令菜单|指令列表|菜单)',
             /** @param { PostTypes.GroupMessageType } msg */
             async (argv, msg) => {
                 let a = []
                 group_cmd_config.forEach((v) => {
-                    a.push(v[0].source)
+                    if (v) a.push(v[1])
                 })
                 let b = []
                 group_config.forEach((v) => {
-                    b.push(v[0].source)
+                    if (v) b.push(v[1])
                 })
+                if (a.length == 0) a.push('暂无指令')
+                if (b.length == 0) b.push('暂无指令')
 
                 CqApi.sendGroupForwardMessageApi({
                     group_id: msg.group_id,
@@ -73,7 +76,7 @@ linkServer(botConfig.onebot_server).then((loginInfo) => {
                             data: {
                                 name: '满月',
                                 uin: '114514',
-                                content: `💮满月娘娘 - OneBot ${versionName}💮`
+                                content: `💮满月娘娘(Group) - OneBot ${versionName}💮`
                             }
                         },
                         {
@@ -136,7 +139,7 @@ linkServer(botConfig.onebot_server).then((loginInfo) => {
                             console.log(cmd)
                             let argv = i[0].exec(cmd)
                             if (argv == null) argv = []
-                            i[1](argv, msg).catch((e) => CqApi.sendGroupMessageApi({
+                            i[2](argv, msg).catch((e) => CqApi.sendGroupMessageApi({
                                 group_id: msg.group_id,
                                 message: (e ? (e + '').length > 100 : false) ? makeSingleForwardMessage(`代码执行异常! ${e}\n\n💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮`) : `[CQ:reply,id=${msg.message_id}]喵呜呜呜呜! 出错了啦!\n${e}`,
                             }))
