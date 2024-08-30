@@ -447,6 +447,25 @@ const configList = [
             })
         }
     ],
+    [
+        /^Bot昵称 (.*)/,
+        'Bot昵称 <昵称>',
+        /** @param { PostTypes.GroupMessageType } msg */
+        async (argv, msg) => {
+            checkAdminOrThrow(msg.sender.user_id)
+
+            await CqApi.setGroupCardApi({
+                group_id: msg.group_id,
+                user_id: msg.self_id,
+                card: argv[1],
+            })
+
+            CqApi.sendGroupMessageApi({
+                group_id: msg.group_id,
+                message: `[CQ:reply,id=${msg.message_id}]满月娘已经改好自己在群内的昵称啦~`,
+            })
+        }
+    ],
 ]
 
 // ======== 功能配置处 ========
