@@ -45,6 +45,23 @@ const configList = [
         }
     ],
     [
+        /^(六你妈逼你就只会说六|问你妈|复读你妈逼)$/,
+        null,
+        /** @param { PostTypes.GroupMessageType } msg */
+        async (argv, msg) => {
+            if (msg.sender.user_id != 3344968290) return
+        
+            CqApi.sendGroupMessageApi({
+                group_id: msg.group_id,
+                message: `[CQ:reply,id=${msg.message_id}]操你妈神经宜壳乐Bot你他妈一天不骂人你他妈会死全家是吧`,
+            })
+            CqApi.sendGroupMessageApi({
+                group_id: msg.group_id,
+                message: `[CQ:reply,id=${msg.message_id}]操你妈神经宜壳乐Bot你他妈一天不骂人你他妈会死全家是吧`,
+            })
+        }
+    ],
+    [
         /^\[CQ:json,data=.*/,
         null,
         /** @param { PostTypes.GroupMessageType } msg */

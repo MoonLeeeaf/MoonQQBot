@@ -59,11 +59,11 @@ linkServer(botConfig.onebot_server).then((loginInfo) => {
             async (argv, msg) => {
                 let a = []
                 group_cmd_config.forEach((v) => {
-                    if (v) a.push(v[1])
+                    if (v[1]) a.push(v[1])
                 })
                 let b = []
                 group_config.forEach((v) => {
-                    if (v) b.push(v[1])
+                    if (v[1]) b.push(v[1])
                 })
 
                 CqApi.sendGroupForwardMessageApi({
