@@ -264,22 +264,33 @@ const configList = [
         }
     ],
     [
-        /^复读 ?(.*)/,
-        '[{reply}] 复读 [内容]',
+        /^复读 ?([^ ]*) ?([0-9]+)?$/,
+        '[{reply}] 复读 <内容/t:次数> [次数]',
         /** @param { PostTypes.GroupMessageType } msg */
         async (argv, msg) => {
             checkAdminOrThrow(msg.sender.user_id)
 
-            if (argv[1])
-                CqApi.sendGroupMessageApi({
-                    group_id: msg.group_id,
-                    message: argv[1],
-                })
-            else
-                CqApi.sendGroupMessageApi({
-                    group_id: msg.group_id,
-                    message: (await CqApi.getMessageApi({ message_id: getReplyMessageId(msg) })).raw_message,
-                })
+            let rep = 1
+
+            let reset_times = /[0-9]+/.test(argv[1]) || argv[2]
+
+            if (reset_times) {
+                checkCoreAdminOrThrow(msg.sender.user_id)
+                rep = parseInt(argv[2] ? argv[2] : argv[1])
+            }
+
+            // 小于多少,就执行多少次
+            for (let i = 0; i < rep; i++)
+                if (getReplyMessageId(msg) == -1)
+                    CqApi.sendGroupMessageApi({
+                        group_id: msg.group_id,
+                        message: argv[1],
+                    })
+                else
+                    CqApi.sendGroupMessageApi({
+                        group_id: msg.group_id,
+                        message: (await CqApi.getMessageApi({ message_id: getReplyMessageId(msg) })).raw_message,
+                    })
         }
     ],
     [

@@ -7,7 +7,7 @@
 // 记得改版本号, 记得改版本号, 记得改版本号
 // 记得改 package.json, 记得改 package.json, 记得改 package.json
 
-const versionName = 'v1.2.0'
+const versionName = 'v1.3.0'
 
 const { CqApi, default: linkServer, useMod, ModTypes, PostTypes } = require('cqhttp-ts')
 
@@ -18,7 +18,7 @@ const io = require('./io')
 
 function forkSelf() {
     child_process.fork('main', ['--child-process'], {}).on('exit', (code) => {
-        if (code != 0) forkSelf()
+        forkSelf()
     })
 }
 
@@ -107,6 +107,14 @@ linkServer(botConfig.onebot_server).then((loginInfo) => {
                                 name: '满月',
                                 uin: '114514',
                                 content: textMsg(`💮请求者: ${msg.sender.nickname}(${msg.sender.user_id})💮`)
+                            }
+                        },
+                        {
+                            type: "node",
+                            data: {
+                                name: '满月',
+                                uin: '114514',
+                                content: textMsg(`💮指令注释💮\n<> 表必要参数\n[] 表可选参数\n{reply} 表指令需无@回复使用\n() 表关键字可选,或者表示多种关键词触发均可\n\n全局指令:无需加上前缀使用\n普通指令:需要加上前缀使用`)
                             }
                         },
                     ],

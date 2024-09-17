@@ -17,8 +17,8 @@ function getReplyMessageId(msg) {
     try {
         return /\[CQ:reply,id=-?([0-9]+)\]/.exec(msg.raw_message)[1]
     } catch (e) {
-        console.log(`获取回复的 msgid 失败(${msg})`)
-        return 0
+        console.log(`获取回复的 msgid 失败(${msg}), 返回了 -1`)
+        return -1
     }
 }
 
@@ -244,6 +244,14 @@ async function cleanUrl(url) {
                 /\/\/www.bilibili.com\/video/,
                 (url) => {
                     let i = url.indexOf('?')
+                    if (i == -1) i = url.length + 1
+                    return url.substring(0, i)
+                },
+            ],
+            [
+                /\/\/mobile.yangkeduo.com\/goods.html/,
+                (url) => {
+                    let i = url.indexOf('&')
                     if (i == -1) i = url.length + 1
                     return url.substring(0, i)
                 },
