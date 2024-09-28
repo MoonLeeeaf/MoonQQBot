@@ -115,7 +115,7 @@ class IoImpl {
     }
     /**
      * 移动文件
-     * @param { String }} path 
+     * @param { String } path 
      * @param { String } newPath 
      */
     static move(path, newPath) {
@@ -143,7 +143,7 @@ class IoImpl {
     }
     /**
      * 检查文件是否存在, 若无则写入, 有则忽略
-     * @param { Buffer || String } 写入数据
+     * @param { Buffer | String } 写入数据
      * @returns { IoImpl } 对象自身
      */
     checkExistsOrWrite(data) {
