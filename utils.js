@@ -249,11 +249,12 @@ async function cleanUrl(url) {
                 },
             ],
             [
-                /\/\/mobile.yangkeduo.com\/goods.html/,
+                /\/\/mobile.yangkeduo.com\/goods1?.html/,
                 (url) => {
-                    let i = url.indexOf('&')
+                    let i = url.indexOf('?')
                     if (i == -1) i = url.length + 1
-                    return url.substring(0, i)
+                    let u = url.substring(0, i)
+                    return u + '?' + /goods_id=([0-9]+)/.exec(url)[0]
                 },
             ],
         ]
